@@ -1,19 +1,25 @@
 Steps to create test PHG of wheat using 10 taxon and chromosome 1A
 
-cbirkett@tcap:/data/wheat$ php make-reference-intervals-short.php
-this creates file using genes from Triticum_aestivum.IWGSC.43.gff3
-extend 1000 bases merge if gap < 100 bases
-creates file intervals_expand1000_gap100.bed
-truncate this file to only include chromosome 1A1 and 1A2, total count is 3757 reference ranges
+#create bed file of reference intervals (intervals_expand1000_gap100.bed)
+#this creates file using genes from Triticum_aestivum.IWGSC.43.gff3
+#extends each interval 1000 bases to include promotor region, merge intervals if gap < 100 bases
+php make-reference-intervals-short.php
+
+#truncate intervals_expand1000_gap100.bed to only include chromosome 1A1 and 1A2, total count is 3757 reference ranges
 
 ./LoadGenomeIntervals.sh configSQLite-exome7.txt 161010_Chinese_Spring_v1.0_pseudomolecules_parts_test.fasta 
 intervals_expand1000_gap100_test.bed wheat_load_data_exome.txt
 
-Taxon files filtered for GQ > 50, only include chromosome 1A1
+#Taxon files filtered for GQ > 50, only include chromosome 1A1
 Chinese_Spring.sam_sorted.RG.DupMarked.recal.bam.test.g.vcf contains 91K lines
 
+#convert gVCF file to use chromosome (1A1, 1A2, 1B1, etc)
+php create-test-gvcf.php gvcfs/Chinese_Spring.sam_sorted.RG.DupMarked.recal.bam.g.vcf
+
+#load 10 taxon (this is example of loading one)
 groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome7.txt 
 -t Chinese_Spring -i tempFileDir/data/gvcfs/Chinese_Spring.sam_sorted.RG.DupMarked.recal.bam.test.g.vcf
 
-loadVariantsHash = 721
-putHaplotypes = 4687
+./CreateConsensi.sh /tempFileDir/data/configSQLite-exome7.txt 161010_Chinese_Spring_v1.0_pseudomolecules_parts.fasta GATK_PIPELINE_exp1000_gap100 CONSENSUS_74 > tempFileDir/data/consensi74.log
+
+./FindPath.sh 10taxontest_74 configSQLite-exome7.txt CONSENSUS_74 161010_Chinese_Spring_v1.0_pseudomolecules_parts_test.fasta HAP_COUNT_METHOD_74 PATH_METHOD_74 > tempFileDir/data/findpath74.log
