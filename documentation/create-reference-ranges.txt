@@ -1,0 +1,14 @@
+Creating Reference Ranges for wheat
+
+I used the gVCF files to define the reference ranges. The script reads in a number of gVCF files with the following filters.
+QUAL > 30
+GQ > 40
+GT == "0/0" or "1/1"
+
+I start with a range of 200 bases on each side of the variant 
+then merge intervals that overlap or are within 10,000 bases of another interval
+
+Then the position information is converted to part1, part2 because 
+some parts of the pipeline can not handle chromosomes greater than 500M base pairs.
+
+The results a written to a file.
