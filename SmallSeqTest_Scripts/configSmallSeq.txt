@@ -1,0 +1,12 @@
+CreateSmallGenomesPlugin.geneLength=2500
+CreateSmallGenomesPlugin.interGeneLength=3000
+CreateSmallGenomesPlugin.numberOfGenes=30
+CreateSmallGenomesPlugin.refInterGeneDelete=0.3
+
+#CreateSmallGenomesPlugin.readLength=128
+#CreateSmallGenomesPlugin.hapDivergence=64
+#CreateSmallGenomesPlugin.interHapDivergence=256
+#CreateSmallGenomesPlugin.refInterGeneDup=0.0
+#CreateSmallGenomesPlugin.wgsDepth=10.0
+#CreateSmallGenomesPlugin.gbsDepth=0.5
+

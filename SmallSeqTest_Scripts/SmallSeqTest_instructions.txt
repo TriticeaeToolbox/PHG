@@ -1,0 +1,86 @@
+NOTE: Some of these instructions may only be relevant to the Cornell BioHPC (cbsu)
+To setup and run the PHG using the small genome created in this
+directory, you need to execute the shell scripts in the order listed below.
+
+The CreateSmallGenomesPlugin class called via the createSmallSeqDS.sh
+script uses a docker to create a small data set for testing.  This data
+set is created in the /root directory of the docker.  These files are
+mounted to the specified place in the user's /workdir.  The scripts have
+docker mount points setup that reflect where the data lives for each step. 
+
+createSmallSeqDS.sh mounts a configuration file to a docker directory.
+This configuration file is used to decide the size and divergence of the
+dataset to be created.  For this example, the gene length, inter-gene length,
+and number of genes are set.  In addition, the "refInterGeneDelete" parameter
+is set, which is used to create diversity in the genomes.
+
+Once you have successfully run the pipeline with the provided configuration file
+you may play with the other available parameters.  These exist in the config
+file but are commented out.
+
+If you wish to re-run createSmallSeqDS.sh after the data sets have been
+created, either delete or rename your phgSmallSeq folder.  Docker is unable
+to delete/overwrite this as it lives in docker in /root.  You will see an error
+if you re-run createSmallSeqDS.sh without removing/renaming the old phgSmallSeq
+directory.
+
+# NOTE: This is only relevant to the Cornell BioHPC (cbsu).
+They have implemented “docker1” which is a more secure docker.  
+I’m unsure about the files in the docker /root and
+whether they will be deletable.
+Before deleting files/directories created on cbsu machines, you must reclaimed
+them via the command:
+
+   docker1 claim
+
+1.  Create the data set:
+    Edit createSmallSeqDS.sh:
+# Edit the code, replacing "/Users/jj332/Documents/PHG/" 
+# with your preferred directory (In this and subsequent scripts).
+# Note: in some subsequent scripts /temp/ is added to FOLDER
+# Then replace "${FOLDER}Scripts/configSmallSeq.txt" with the
+# path on your machine that contains the configSmallSeq.txt file
+
+    ./createSmallSeqDS.sh > <outputfile>
+
+2.  Load the reference genome data:
+    Edit loadGenomes.sh:
+
+    ./loadGenomes.sh > <outputfile>
+
+3.  Load assembly haplotypes:
+    Edit createAssemblyHaplotypes.sh:
+
+    ./createAssemblyHaplotypes.sh > <outputfile>
+
+4.  Create/load the GATK raw haplotypes:
+    Edit createHaplotypesAll.sh:
+
+    ./createHaplotypesAll.sh  > <outputfile> 
+
+5.  Create/load consensus data:
+    Edit createConsensus.sh:
+
+    ./createConsensus.sh > <outputfile>
+
+6.  Find and export paths through the graph:
+    Edit findAndExportPath.sh:
+
+    ./findAndExportPath.sh  > <outputfile>
+
+This short pipeline creates and populates an sqlite database.  The data files
+needed for loading the database are created in the first step (createSmallSeqDS.sh)
+
+Starting with loadGenomes.sh, each step above will populate additional data in the
+sqlite database.  This database is named "phgSmallSeq.db".  The path to the database is:
+
+      ${FOLDER}/temp/phgSmallSeq/phgSmallSeq.db
+
+
+Size of the outputfiles from each script when I ran them:
+  5615348  createSmallSeqDS.log
+    19796  loadGenomes.log
+    49930  createAssemblyHaplotypes.log
+   258315  createHaplotypesAll.log
+   395301  createConsensus.log
+  1359847  findAndExportPath.log
