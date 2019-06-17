@@ -1,4 +1,4 @@
-create-refIntervalsFromGVCF.php - create reference intervals from gVCF file and write to bed file
+createRefIntervalsFromGVCF.php - create reference intervals from gVCF file and write to bed file
 
 create-refIntervalsFromGFF.php - ceate reference intervals from Ensembl Plant GFF file and write to bed file
 
