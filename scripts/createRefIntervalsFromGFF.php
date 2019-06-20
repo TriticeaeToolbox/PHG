@@ -1,15 +1,19 @@
 <?php
 
-//intervals from EnsemblPlants genes
-//expand 1000, gap 100
-//convert into chromosome part reference
+/**
+ * intervals from EnsemblPlants genes
+ * expand 1000, gap 100
+ * convert into chromosome part reference
+ */
 
 $testing = false;
+
+$gap = 100; //join together if less than this distance
+$expand = 1000;  //expand to include promotor
 
 $file = "/data/wheat/Triticum_aestivum.IWGSC.43.gff3";
 $fh = fopen($file, "r") or die("Error: $file\n");
 $count = 0;
-$expand = 1000;
 echo "reading in $file\n";
 while (!feof($fh)) {
     $tmp = fgets($fh);
@@ -55,7 +59,7 @@ while (!feof($fh)) {
 fclose($fh);
 echo "$count from $file\n";
 
-$file = "/data/wheat/wga_v1/Wheat_IWGSC_WGA_v1.0_pseudomolecules/161010_Chinese_Spring_v1.0_pseudomolecules_parts_to_chr.bed";
+$file = "161010_Chinese_Spring_v1.0_pseudomolecules_parts_to_chr.bed";
 $fh = fopen($file, "r") or die("Error: $file\n");
 while (!feof($fh)) {
     $line = fgetcsv($fh, 0, "\t");
@@ -65,15 +69,18 @@ while (!feof($fh)) {
     $stop = $line[5];
     if ($start == 0) {
         $translate_list[$chrom] = $stop;
-        echo "$chrom $stop\n";
+        echo "$chrom_part $chrom $stop\n";
     }
 }
 fclose($fh);
 
-$file = "intervals_expand1000_gap100.bed";
-$fh = fopen($file, "w") or die("Error $file\n"); 
+if ($testing) {
+    $file = "intervals_expand1000_gap100_test.bed";
+} else {
+    $file = "intervals_expand1000_gap100.bed";
+}
+$fh = fopen($file, "w") or die("Error $file\n");
 //sort then merge each chromosome
-$gap = 100; //join together if less than this distance
 $min = 25;  //minimum size of reference range
 $count_total = 0;
 $count_good = 0;
@@ -83,14 +90,14 @@ foreach ($range as $chrom => $val) {
     $data = $range[$chrom];
     $name = $range_name[$chrom];
     $count1 = count($data);
-    usort($data, function($a, $b)
-    {
-        return $a[0] - $b[0];
-    });
+    usort($data, function($a, $b) {
+            return $a[0] - $b[0];
+        }
+    );
     
-    $n = 0; $len = count($data);
-    for ($i = 1; $i < $len; ++$i)
-    {
+    $n = 0;
+    $len = count($data);
+    for ($i = 1; $i < $len; ++$i) {
         if ($data[$i][0] > $data[$n][1] + $gap + 1) {  //no overlap
             $n = $i;
         } elseif ($data[$n][1] < $data[$i][1] + $gap) {
@@ -107,8 +114,6 @@ foreach ($range as $chrom => $val) {
         }
     }
     $count2 = count($data);
-    $len = count($data);
-    $count_total = $count_total + $len;
 
     //translate coordinates
     if (preg_match("/chr([A-Za-z]+)/", $chrom, $match)) {
@@ -124,8 +129,7 @@ foreach ($range as $chrom => $val) {
     }
     //echo "using $chrom_tran for $chrom\n";
     
-    foreach ($data as $i => $val) 
-    {
+    foreach ($data as $i => $val) {
         $tmpn = $name[$i];
         $tmp1 = $data[$i][0];
         $tmp2 = $data[$i][1];
@@ -147,13 +151,11 @@ foreach ($range as $chrom => $val) {
 
         if (($tmp2 - $tmp1) > $min) {
             $count_good++;
-            //fwrite($fh, "$chrom_part\tPHGv1\tgene\t$tmp1\t$tmp2\t.\t.\t.\tID=$tmpn\n");
             fwrite($fh, "$chrom_part\t$tmp1\t$tmp2\t$tmpn\n");
         } else {
             echo "Error: $tmp2 $tmp1\n";
         }
-    } 
+    }
     echo "$chrom origninal_count $count1 merge_count $count2 $bases_total\n";
 }
-echo "total $count_total\n";
 echo "good $count_good\n";
