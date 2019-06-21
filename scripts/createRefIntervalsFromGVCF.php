@@ -5,12 +5,15 @@
  * The script reads in gVCF files and creates bed file for loading into PHG
  */
 
-$selChrom = "chr1A";
+$selChrom = "chr5A";
+$chrom_tran = "5A";
 
 $testing = false;
 
-$minQUAL = 30;
-$minGQ = 40;
+$minQUAL = 30;  //variant must have QUAL greater than 30
+$minGQ = 40;    //variant must have GQ greater than 40
+$minDP = 4;     //variant must have DP greater than 4
+$minTaxon = 2;  //variant must be present in more than 2 taxons
 $expand = 200;
 $gap = 10000;
 
@@ -21,11 +24,9 @@ while (!feof($fh)) {
     $chrom_part = $line[0];
     $chrom = $line[3];
     $start = $line[4];
-    $stop = $line[5];
-    if ($start == 0) {
-        $translate_list[$chrom_part] = $stop;
-        echo "$chrom_part $chrom $stop\n";
-    }
+    $stop = $line[2];
+    $translate_list[$chrom_part] = $stop;
+    echo "$chrom_part $chrom $stop\n";
 }
 fclose($fh);
 
@@ -52,23 +53,24 @@ foreach ($files as $value) {
             $pos = $lineA[1];
             $qual = $lineA[5];
             $tmp1 = $lineA[9];
-            $tmp2 = explode(":", $tmp1);
-            $gt = $tmp2[0];
-            $gq = $tmp2[2];
             if ($qual > $minQUAL) {
+                $tmp2 = explode(":", $tmp1);
+                $gt = $tmp2[0];
+                $dp = $tmp2[2];
+                $gq = $tmp2[3];
                 $count++;
-                if ($gq > $minGQ) {
+                if (($gq > $minGQ) && ($dp > $minDP)) {
                     if (isset($good_list[$chr][$pos])) {
                         $good_list[$chr][$pos]++;
                     } else {
                         $good_list[$chr][$pos] = 1;
                     }
                 }
-             }
-             $line1 = fgets($fh);
-             if (($testing) && ($count > 100000)) {
-                 break;
-             }
+            }
+            $line1 = fgets($fh);
+            if (($testing) && ($count > 100000)) {
+                break;
+            }
         }
         fclose($fh);
         if (($testing) && ($count_file > 10)) {
@@ -80,7 +82,7 @@ foreach ($files as $value) {
 if ($testing) {
     $file = "intervals-exome-test.bed";
 } else {
-    $file = "intervals-exome.bed";
+    $file = "intervals-exome-" . $chrom_tran . ".bed";
 }
 $fh = fopen($file, "w") or die("Error $file\n");
 echo "writing out $file\n";
@@ -92,8 +94,14 @@ foreach ($good_list as $chrom => $val1) {
     $data = array();
     $data_snp = array();
     foreach ($tmp as $key => $val2) {
-        if ($val2 > 1) {
-            $data[] = array($key - $expand, $key + $expand);
+        if ($val2 > 2) {
+            $start = $key - $expand;
+            $stop = $key + $expand;
+            if ($stop > $translate_list[$chrom]) {
+                echo "out of range $stop $chrom\n";
+                $stop = $translate_list[$chrom];
+            }
+            $data[] = array($start, $stop);
             $data_snp[] = $val2;
         }
     }
@@ -130,33 +138,17 @@ foreach ($good_list as $chrom => $val1) {
     //translate coordinates
     if (preg_match("/chr([A-Za-z]+)/", $chrom, $match)) {
         $chrom_tran = "U";
-        $break = 999999999999;
-    } elseif (preg_match("/chr(\d[A-Z])/", $chrom, $match)) {
-        $chrom_tran = $match[1];
-        $break = $translate_list[$chrom];
+    } elseif (preg_match("/chr(\d[A-Z])_part(\d)/", $chrom, $match)) {
+        $chrom_tran = $match[1] . $match[2];;
     } else {
         echo "Error: $chrom no match\n";
         $chrom_tran = "U";
-        $break = 999999999999;
     }
  
     foreach ($data as $key => $value) {
         $tmp1 = $data[$key][0];
         $tmp2 = $data[$key][1];
-        if (($chrom == "chrUN") || ($chrom == "chrUn")) {
-            $chrom_part = "U";
-        } elseif ($tmp1 > $break) {
-            $tmp1 = $tmp1 - $break;
-            $tmp2 = $tmp2 - $break;
-            $chrom_part = $chrom_tran . "2";
-        } elseif (($tmp2 > $break) && ($tmp1 < $break)) {
-            echo "Error: $break $tmp1 $tmp2\n";
-            $chrom_part = $chrom_tran . "1";
-            $tmp2 = $break;
-        } else {
-            $chrom_part = $chrom_tran . "1";
-        }
         $taxonCnt = $data_snp[$key];
-        fwrite($fh, "$chrom_part\t$tmp1\t$tmp2\t$taxonCnt\n");
+        fwrite($fh, "$chrom_tran\t$tmp1\t$tmp2\t$taxonCnt\n");
     }
 }
