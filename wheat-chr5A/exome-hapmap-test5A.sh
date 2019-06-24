@@ -1,0 +1,10 @@
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t Chinese_Spring -i tempFileDir/data/gvcfs/Chinese_Spring.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t Avalon -i tempFileDir/data/gvcfs/Avalon.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t Rialto -i tempFileDir/data/gvcfs/Rialto.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t Truman -i tempFileDir/data/gvcfs/Truman.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t PI349512 -i tempFileDir/data/gvcfs/PI349512.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t PI481923 -i tempFileDir/data/gvcfs/PI481923.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t PI366716 -i tempFileDir/data/gvcfs/PI366716.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t PI382150 -i tempFileDir/data/gvcfs/PI382150.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t PI222669 -i tempFileDir/data/gvcfs/PI222669.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
+groovy ./tempFileDir/CreateHaplotypesFromGVCF.groovy -config tempFileDir/data/configSQLite-exome5A.txt -t PI262611 -i tempFileDir/data/gvcfs/PI262611.sam_sorted.RG.DupMarked.recal.bam.chr5A.g.vcf
