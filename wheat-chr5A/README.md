@@ -1,7 +1,7 @@
 # Description of steps to create PHG database
 
-## The database can be downloads at 
-<a href="https://app.globus.org/file-manager?origin_id=940c21fe-377d-11e8-b96a-0ac6873fc732&origin_path=%2Fhome%2Fjj332_pgh%2Fphg-5A%2F" target="_new">phg-5A</a>
+The database can be downloads using Globus.org at 
+ <a href="https://app.globus.org/file-manager?origin_id=940c21fe-377d-11e8-b96a-0ac6873fc732&origin_path=%2Fhome%2Fjj332_pgh%2Fphg-5A%2F" target="_new">phg-5A</a>
 
 1. Create bed file of reference intervals (createRefIntervalsFromGVCF.php)
 * output file - intervals_exome-5A.bed
