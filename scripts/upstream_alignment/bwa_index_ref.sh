@@ -28,7 +28,7 @@ module load miniconda
 
 #### User-defined constants ####
 
-ref_file="/project/genolabswheatphg/v1_refseq/Triticum_aestivum.IWGSC.dna.toplevel.fa"
+ref_file="/project/genolabswheatphg/v1_refseq/split_chroms/v1_CS_refseq_splitchroms_trunc_names.fa"
 
 
 #### Executable ####

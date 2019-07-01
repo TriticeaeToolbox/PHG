@@ -43,11 +43,11 @@
 
 #### SLURM job control parameters ####
 
-#SBATCH --job-name="bwa-align-paired" #name of the job submitted
+#SBATCH --job-name="merge-bams" #name of the job submitted
 #SBATCH -p short #name of the queue you are submitting job to
 #SBATCH -N 1 #number of nodes in this job
 #SBATCH -n 1 #number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
-#SBATCH -t 10:00:00 #time allocated for this job hours:mins:seconds
+#SBATCH -t 4:00:00 #time allocated for this job hours:mins:seconds
 #SBATCH --mail-user=bpward2@ncsu.edu #enter your email address to receive emails
 #SBATCH --mail-type=BEGIN,END,FAIL #will receive an email when job starts, ends or fails
 #SBATCH -o "stdout.%j.%N" # standard out %j adds job number to outputfile name and %N adds the node name
@@ -57,9 +57,9 @@ module load samtools/1.9
 
 #### User-defined Constants ####
 
-in_bams_dir="/project/genolabswheatphg/alignments/wheatCAP_lane_bams"
-out_bams_dir="/project/genolabswheatphg/alignments/wheatCAP_merged_bams"
-samples="/project/genolabswheatphg/wheatCAP_first19_samps.tsv"
+in_bams_dir="/project/genolabswheatphg/alignments/wheatCAP_onesamp_lane_bams"
+out_bams_dir="/project/genolabswheatphg/alignments/wheatCAP_onesamp_merged_bams"
+samples="/project/genolabswheatphg/wheatCAP_one_samp.tsv"
 
 
 #### Executable ####

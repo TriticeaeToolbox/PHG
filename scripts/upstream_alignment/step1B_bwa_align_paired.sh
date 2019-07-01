@@ -23,7 +23,7 @@
 #SBATCH -p short #name of the queue you are submitting job to
 #SBATCH -N 1 #number of nodes in this job
 #SBATCH -n 20 #number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
-#SBATCH -t 30:00:00 #time allocated for this job hours:mins:seconds
+#SBATCH -t 4:00:00 #time allocated for this job hours:mins:seconds
 #SBATCH --mail-user=bpward2@ncsu.edu #enter your email address to receive emails
 #SBATCH --mail-type=BEGIN,END,FAIL #will receive an email when job starts, ends or fails
 #SBATCH -o "stdout.%j.%N" # standard out %j adds job number to outputfile name and %N adds the node name
@@ -36,16 +36,16 @@ source activate bwa
 #### User-defined constants ####
 
 fastq_dir="/project/genolabswheatphg/filt_fastqs/wheatCAP_parents"
-ref_gen="/project/genolabswheatphg/v1_refseq/Triticum_aestivum.IWGSC.dna.toplevel.fa"
-samples="/project/genolabswheatphg/wheatCAP_samps_restart.tsv"
-out_dir="/project/genolabswheatphg/alignments/wheatCAP_lane_bams"
+ref_gen="/project/genolabswheatphg/v1_refseq/split_chroms/v1_CS_refseq_splitchroms_trunc_names.fa"
+samples="/project/genolabswheatphg/wheatCAP_one_samp.tsv"
+out_dir="/project/genolabswheatphg/alignments/wheatCAP_onesamp_lane_bams"
 ncores=20
 
 
 #### Executable ####
 
 date
-mkdir $out_dir
+mkdir -p $out_dir
 
 ## First recursively find all fastq files in fastq_dir
 shopt -s globstar nullglob
