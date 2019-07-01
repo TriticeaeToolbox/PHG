@@ -1,7 +1,7 @@
 # Description of steps to create PHG database
 
 The database (size is 2G) can be downloads using Globus.org at 
- <a href="https://app.globus.org/file-manager?origin_id=6977f294-99a9-11e9-8e6e-029d279f7e24&origin_path=%2F" target="_blank">HapMap-5A</a>. This link works for anyone with Globus account.
+ <a href="https://app.globus.org/file-manager?origin_id=a2e08596-9b98-11e9-bf60-0e4a062367b8&origin_path=%2F" target="_blank">HapMap-5A</a>. This link works for anyone with Globus account.
 
 1. Create bed file of reference intervals (createRefIntervalsFromGVCF.php)
 * output file - intervals_exome-5A.bed
